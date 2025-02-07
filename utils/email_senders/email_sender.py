@@ -1,9 +1,8 @@
 """
 Classe para enviar e-mails.
 
-:author: Mateus Herrera Gobetti Borges
-:github: mateusherrera
-:date: 2024-06-27.
+:created by:    Mateus Herrera
+:created at:    2025-02-07
 """
 
 from email.message import EmailMessage
@@ -17,13 +16,13 @@ class EmailSender:
 
     # ini: Attributes
 
-    smtp_server: str
-    smtp_port: str
-    smtp_user: str
-    smtp_password: str
+    smtp_server     : str
+    smtp_port       : str
+    smtp_user       : str
+    smtp_password   : str
 
-    sender: str
-    body: str
+    sender  : str
+    body    : str
 
     # end: Attributes
 
@@ -36,11 +35,11 @@ class EmailSender:
         :param dict_config: Dicionário com as configurações para envio de e-mails.
             - Opcional: Caso opte por não usar o arquivo .env.
             - Estrutura: {
-                'smtp_server': 'smtp_server',
-                'smtp_port': 'smtp_port',
-                'smtp_user': 'smtp_user',
-                'smtp_password': 'smtp_password',
-                'sender': 'sender_email',
+                'smtp_server'   : 'smtp_server',
+                'smtp_port'     : 'smtp_port',
+                'smtp_user'     : 'smtp_user',
+                'smtp_password' : 'smtp_password',
+                'sender'        : 'sender_email',
             }
         """
 
@@ -51,10 +50,10 @@ class EmailSender:
             else:
                 self.dict_config = dict_config
 
-                self.smtp_server = dict_config['smtp_server']
-                self.smtp_port = dict_config['smtp_port']
-                self.smtp_user = dict_config['smtp_user']
-                self.smtp_password = dict_config['smtp_password']
+                self.smtp_server    = dict_config['smtp_server']
+                self.smtp_port      = dict_config['smtp_port']
+                self.smtp_user      = dict_config['smtp_user']
+                self.smtp_password  = dict_config['smtp_password']
 
                 self.sender = dict_config['sender']
 
@@ -68,10 +67,10 @@ class EmailSender:
                 )
 
             else:
-                self.smtp_server = getenv('SMTP_SERVER')
-                self.smtp_port = getenv('SMTP_PORT')
-                self.smtp_user = getenv('SMTP_USER')
-                self.smtp_password = getenv('SMTP_PASSWORD')
+                self.smtp_server    = getenv('SMTP_SERVER')
+                self.smtp_port      = getenv('SMTP_PORT')
+                self.smtp_user      = getenv('SMTP_USER')
+                self.smtp_password  = getenv('SMTP_PASSWORD')
 
                 self.sender = getenv('SENDER')
 
@@ -134,9 +133,9 @@ class EmailSender:
 
         msg = EmailMessage()
 
-        msg['Subject'] = subject
-        msg['From'] = self.sender
-        msg['To'] = receivers
+        msg['Subject']  = subject
+        msg['From']     = self.sender
+        msg['To']       = receivers
 
         msg.set_content(self.body)
 

@@ -1,9 +1,8 @@
 """
 Classe para criar conexões com o banco de dados (Postgres).
 
-:author: Mateus Herrera Gobetti Borges
-:github: mateusherrera
-:date: 2024-06-27
+:created by:    Mateus Herrera
+:created at:    2025-02-07
 """
 
 from sqlalchemy import create_engine, Connection, Engine, NullPool
@@ -29,12 +28,12 @@ class DBConnection:
         :param dict_credencials: Dicionário com as credenciais para conexão com o banco de dados.
             - Opcional: Caso opte por não usar o arquivo .env.
             - Estrutura: {
-                'driver': 'driver_name',
-                'username': 'username',
-                'password': 'password',
-                'host': 'host',
-                'port': 'port',
-                'database': 'database',
+                'driver'    : 'driver_name',
+                'username'  : 'username',
+                'password'  : 'password',
+                'host'      : 'host',
+                'port'      : 'port',
+                'database'  : 'database',
             }
         """
 
@@ -43,12 +42,12 @@ class DBConnection:
         else:
             load_dotenv(override=True)
             self.dict_credencials = {
-                'driver': getenv('PS_DRIVER'),
-                'username': getenv('PS_USER'),
-                'password': getenv('PS_PASSWORD'),
-                'host': getenv('PS_HOST'),
-                'port': getenv('PS_PORT'),
-                'database': getenv('PS_DB'),
+                'driver'    : getenv('PS_DRIVER'),
+                'username'  : getenv('PS_USER'),
+                'password'  : getenv('PS_PASSWORD'),
+                'host'      : getenv('PS_HOST'),
+                'port'      : getenv('PS_PORT'),
+                'database'  : getenv('PS_DB'),
             }
         pass
 
