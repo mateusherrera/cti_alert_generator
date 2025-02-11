@@ -5,7 +5,10 @@ Módulo de alertas, para pegar e atualizar os alertas da aplicação.
 :created at:    2025-02-07
 """
 
-from requests import post, put
+from os import getenv
+from requests import get
+from base64 import b64encode
+from dotenv import load_dotenv
 
 
 class Alerts:
@@ -13,7 +16,7 @@ class Alerts:
 
     # ini: attributes
 
-    URL: str = 'http://localhost:8877/api/v1/alerts/'
+    URL: str = 'http://localhost:8877/api/v1/alert/'
 
     # end: attributes
 
@@ -27,7 +30,19 @@ class Alerts:
         :return:   Alertas ativos.
         """
 
-        response = post(Alerts.URL + 'run/today/active/')
+        load_dotenv()
+        user_django = getenv('USER_DJANGO')
+        pass_django = getenv('PASS_DJANGO')
+
+        basic_auth = b64encode(
+            f'{user_django}:{pass_django}'.encode('utf-8')
+        ).decode('utf-8')
+
+        headers = {
+            'Authorization': f'Basic {basic_auth}',
+        }
+
+        response = get(Alerts.URL + 'run/today/', headers=headers)
         if response.status_code != 200:
             return []
         return response.json()
@@ -43,18 +58,22 @@ class Alerts:
         pass
 
     @staticmethod
-    def create_post_alerted(id_post: int, title: str, description: str, alert_id: int, forum: str, keywords: list, relevance: int, date: str):
+    def create_post_alerted(data_post: dict):
         """
         Cria um post alertado.
+            Data example:
+                {
+                    'id_post': int,
+                    'title': str,
+                    'description': str,
+                    'alert_id': int,
+                    'forum': str,
+                    'keywords': list,
+                    'relevance': int,
+                    'date': str
+                }
 
-        :param id_post:         ID do post.
-        :param title:           Título do post.
-        :param description:     Descrição do post.
-        :param alert_id:        ID do alerta.
-        :param forum:           Fórum do post.
-        :param keywords:        Palavras-chave encontradas no post.
-        :param relevance:       Relevância do post.
-        :param date:            Data do post.
+        :param data_post:       Dados do post alertado.
         """
 
         pass
