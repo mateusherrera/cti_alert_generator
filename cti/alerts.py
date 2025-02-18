@@ -53,8 +53,10 @@ class Alerts:
         headers = Alerts.get_header()
 
         response = get(Alerts.URL + 'run/today/', headers=headers)
-        return response.json()['data'] if response.json()['data'] else response.json()['error']
-
+        if response.status_code != 200:
+            return []
+        return response.json()
+    
     @staticmethod
     def update_run_date(alert_id: int) -> dict:
         """
@@ -67,7 +69,9 @@ class Alerts:
         headers = Alerts.get_header()
 
         response = get(Alerts.URL + f'{alert_id}/update/run/', headers=headers)
-        return response.json()['data'] if response.json()['data'] else response.json()['error']
+        if response.status_code != 200:
+            return response.json()['data']
+        return response.json()
 
     @staticmethod
     def create_post_alerted(data_post: dict) -> dict:
@@ -92,7 +96,9 @@ class Alerts:
         headers = Alerts.get_header()
 
         response = post(Alerts.URL + 'post_alerted/', data=data_post, headers=headers)
-        return response.json()['data'] if response.json()['data'] else response.json()['error']
+        if response.status_code != 201:
+            return None
+        return response.json()
 
     # end: methods
 
