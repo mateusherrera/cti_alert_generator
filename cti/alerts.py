@@ -6,8 +6,8 @@ Módulo de alertas, para pegar e atualizar os alertas da aplicação.
 """
 
 from os import getenv
-from requests import get
 from base64 import b64encode
+from requests import get, post
 from dotenv import load_dotenv
 
 
@@ -23,11 +23,11 @@ class Alerts:
     # ini: methods
 
     @staticmethod
-    def get_to_run() -> list:
+    def get_header() -> dict:
         """
-        Pega os alertas ativos.
+        Pega a autenticação para acessar os alertas.
 
-        :return:   Alertas ativos.
+        :return:   Cabeçalho (com autenticação).
         """
 
         load_dotenv()
@@ -38,27 +38,39 @@ class Alerts:
             f'{user_django}:{pass_django}'.encode('utf-8')
         ).decode('utf-8')
 
-        headers = {
+        return {
             'Authorization': f'Basic {basic_auth}',
         }
 
-        response = get(Alerts.URL + 'run/today/', headers=headers)
-        if response.status_code != 200:
-            return []
-        return response.json()
-    
     @staticmethod
-    def update_run_date(alert_id: int):
+    def get_to_run() -> list:
+        """
+        Pega os alertas ativos.
+
+        :return:   Alertas ativos.
+        """
+
+        headers = Alerts.get_header()
+
+        response = get(Alerts.URL + 'run/today/', headers=headers)
+        return response.json()['data'] if response.json()['data'] else response.json()['error']
+
+    @staticmethod
+    def update_run_date(alert_id: int) -> dict:
         """
         Atualiza a data de execução de um alerta.
 
         :param alert_id:        ID do alerta.
+        :return:                Alerta atualizado.
         """
 
-        pass
+        headers = Alerts.get_header()
+
+        response = get(Alerts.URL + f'{alert_id}/update/run/', headers=headers)
+        return response.json()['data'] if response.json()['data'] else response.json()['error']
 
     @staticmethod
-    def create_post_alerted(data_post: dict):
+    def create_post_alerted(data_post: dict) -> dict:
         """
         Cria um post alertado.
             Data example:
@@ -74,9 +86,13 @@ class Alerts:
                 }
 
         :param data_post:       Dados do post alertado.
+        :return:                Post alertado criado.
         """
 
-        pass
+        headers = Alerts.get_header()
+
+        response = post(Alerts.URL + 'post_alerted/', data=data_post, headers=headers)
+        return response.json()['data'] if response.json()['data'] else response.json()['error']
 
     # end: methods
 
