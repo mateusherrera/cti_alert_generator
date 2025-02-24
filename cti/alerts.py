@@ -16,7 +16,7 @@ class Alerts:
 
     # ini: attributes
 
-    URL: str = 'http://localhost:8877/api/v1/alert/'
+    URL: str = 'http://localhost:8877/api/v1/'
 
     # end: attributes
 
@@ -52,7 +52,7 @@ class Alerts:
 
         headers = Alerts.get_header()
 
-        response = get(Alerts.URL + 'run/today/', headers=headers)
+        response = get(Alerts.URL + 'alert/run/today/', headers=headers)
         if response.status_code != 200:
             return []
         return response.json()
@@ -68,7 +68,7 @@ class Alerts:
 
         headers = Alerts.get_header()
 
-        response = get(Alerts.URL + f'{alert_id}/update/run/', headers=headers)
+        response = get(Alerts.URL + f'alert/{alert_id}/update/run/', headers=headers)
         if response.status_code != 200:
             return response.json()['data']
         return response.json()
@@ -77,14 +77,14 @@ class Alerts:
     def create_post_alerted(data_post: dict) -> dict:
         """
         Cria um post alertado.
-            Data example:
+            Exemplo de dict:
                 {
                     'id_post': int,
                     'title': str,
                     'description': str,
-                    'alert_id': int,
+                    'alert': int,
                     'forum': str,
-                    'keywords': list,
+                    'keywords_found': list,
                     'relevance': int,
                     'date': str
                 }
