@@ -12,6 +12,7 @@ class PostExample:
 
     posts: list = [
         {
+            'id': 1,
             'title': 'Massive Data Leak Exposes Thousands of CPF Numbers',
             'description': 'A recent breach in a financial institution led to the leak of thousands of CPF numbers and other sensitive data.',
             'relevance': 0.9,
@@ -20,6 +21,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 2,
             'title': 'Hackers Target Government Database',
             'description': 'A hacker group has claimed responsibility for an attack on a national government database, exposing confidential citizen records.',
             'relevance': 0.85,
@@ -28,6 +30,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 3,
             'title': 'How to Improve Your Password Security',
             'description': 'A cybersecurity expert shares best practices for creating and managing strong passwords.',
             'relevance': 0.3,
@@ -36,6 +39,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 4,
             'title': 'New Banking Malware Spreads via Phishing Emails',
             'description': 'Cybercriminals are distributing a new type of banking malware using fake email attachments.',
             'relevance': 0.75,
@@ -44,6 +48,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 5,
             'title': 'Tech Company Suffers Security Breach',
             'description': 'A well-known tech company confirmed a security breach but claims no sensitive user data was compromised.',
             'relevance': 0.6,
@@ -52,6 +57,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 6,
             'title': 'CPF Database Sold on Dark Web',
             'description': 'A database containing CPF numbers and personal details is reportedly being sold on underground forums.',
             'relevance': 0.92,
@@ -60,6 +66,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 7,
             'title': 'Ransomware Attack Hits Major Hospital Network',
             'description': 'A ransomware attack has crippled operations at several hospitals, demanding millions in cryptocurrency.',
             'relevance': 0.88,
@@ -68,6 +75,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 8,
             'title': 'Best VPNs for 2025',
             'description': 'A cybersecurity blog reviews the top VPN services for privacy and security in 2025.',
             'relevance': 0.2,
@@ -76,6 +84,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 9,
             'title': 'New Phishing Scam Targets Bank Customers',
             'description': 'Scammers are sending fake bank alerts to trick customers into revealing their login credentials.',
             'relevance': 0.7,
@@ -84,6 +93,7 @@ class PostExample:
             'classification_date': '2025-02-11'
         },
         {
+            'id': 10,
             'title': 'Leaked Credentials Lead to Unauthorized Bank Transfers',
             'description': 'Cybercriminals have used leaked login details to make unauthorized transactions from user accounts.',
             'relevance': 0.8,
