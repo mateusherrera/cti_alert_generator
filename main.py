@@ -21,6 +21,9 @@ def save_alert_to_file(filename: str, alert_data: dict, df_posts_relevants: Data
     """
 
     with open(filename, 'a') as file:
+        if file.tell() != 0:
+            file.write('\n\n')
+
         file.write(f'Alerta: {alert_data.get("id", None)}\n')
         file.write(f'Forums: {alert_data.get("forums", None)}\n')
         file.write(f'Keywords: {alert_data.get("keywords", None)}\n')
@@ -31,8 +34,7 @@ def save_alert_to_file(filename: str, alert_data: dict, df_posts_relevants: Data
             file.write(f'\tTitle: {post["title"]}\n')
             file.write(f'\tDescription: {post["description"]}\n')
             file.write(f'\tForum: {post["source"]}\n')
-            file.write(f'\tRelevance: {post["relevance"]}\n\n')
-        file.write('\n\n\n')
+            file.write(f'\tRelevance: {post["relevance"]}\n')
 
 
 if __name__ == '__main__':
@@ -64,11 +66,34 @@ if __name__ == '__main__':
                 df_posts_relevants['source'].str.upper().isin([forum.upper() for forum in forums])
             ]
 
+            df_posts_relevants['keywords_found'] = df_posts_relevants.apply(
+                lambda row: ';'.join([kw for kw in keywords if kw.lower() in (row['title'] + row['description']).lower()]),
+                axis=1
+            )
+
             df_posts_relevants = df_posts_relevants[
                 df_posts_relevants['title'].str.contains('|'.join(keywords), case=False, na=False) |
                 df_posts_relevants['description'].str.contains('|'.join(keywords), case=False, na=False)
             ]
 
-            save_alert_to_file(filename, alert_data, df_posts_relevants)
+            # save_alert_to_file(filename, alert_data, df_posts_relevants)
+
+            posts_alerted = [
+                {
+                    'id_post'           :   row['id'],
+                    'title'             :   row['title'],
+                    'description'       :   row['description'],
+                    'alert'             :   alert_data['id'],
+                    'forum'             :   row['source'],
+                    'keywords_found'    :   row['keywords_found'].split(';'),
+                    'relevance'         :   row['relevance'],
+                    'date'              :   row['classification_date'],
+                }
+                for _, row in df_posts_relevants.iterrows()
+            ]
+            
+            for post_alerted in posts_alerted:
+                Alerts.create_post_alerted(post_alerted)
+            Alerts.update_run_date(alert_data['id'])
 
     pass
