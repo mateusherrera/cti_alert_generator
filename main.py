@@ -59,15 +59,20 @@ if __name__ == '__main__':
             last_run        = alert_data.get('last_run', None)
             run             = alert_data.get('run', None)
 
-            # TODO: Pegar intervalo de tempo nos posts
-            df_posts_relevants = df_posts[ df_posts[ 'relevance' ] >= is_relevant ]
+            df_posts_relevants = df_posts[
+                (df_posts['classification_date'] >= last_run) &
+                (df_posts['classification_date'] <= run) &
+                (df_posts['relevance'] >= is_relevant) &
+                df_posts['source'].str.upper().isin([forum.upper() for forum in forums])
+            ].copy()
 
-            df_posts_relevants = df_posts_relevants[
-                df_posts_relevants['source'].str.upper().isin([forum.upper() for forum in forums])
-            ]
+            if df_posts_relevants.empty:
+                Alerts.update_run_date(alert_data['id'])
+                continue
 
             df_posts_relevants['keywords_found'] = df_posts_relevants.apply(
-                lambda row: ';'.join([kw for kw in keywords if kw.lower() in (row['title'] + row['description']).lower()]),
+                lambda row: ';'
+                    .join([kw for kw in keywords if kw.lower() in (row['title'] + row['description']).lower()]),
                 axis=1
             )
 
@@ -75,6 +80,10 @@ if __name__ == '__main__':
                 df_posts_relevants['title'].str.contains('|'.join(keywords), case=False, na=False) |
                 df_posts_relevants['description'].str.contains('|'.join(keywords), case=False, na=False)
             ]
+
+            if df_posts_relevants.empty:
+                Alerts.update_run_date(alert_data['id'])
+                continue
 
             # save_alert_to_file(filename, alert_data, df_posts_relevants)
 
@@ -91,7 +100,7 @@ if __name__ == '__main__':
                 }
                 for _, row in df_posts_relevants.iterrows()
             ]
-            
+
             for post_alerted in posts_alerted:
                 Alerts.create_post_alerted(post_alerted)
             Alerts.update_run_date(alert_data['id'])
