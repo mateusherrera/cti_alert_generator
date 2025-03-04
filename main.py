@@ -49,7 +49,11 @@ if __name__ == '__main__':
     filename = f'posts_alerted_{now}.txt'
 
     if alerts_data and posts:
+        posts_alerted_by_user = dict()
+
         for alert_data in alerts_data:
+            name            = alert_data.get('name', None)
+            user            = alert_data.get('id_user', None)
             emails          = alert_data.get('emails', None)
 
             forums          = alert_data.get('forums', None)
@@ -86,6 +90,12 @@ if __name__ == '__main__':
                 continue
 
             # save_alert_to_file(filename, alert_data, df_posts_relevants)
+
+            qtde_posts_alerted = len(df_posts_relevants)
+
+            if not posts_alerted_by_user[user]:
+                posts_alerted_by_user[user] = dict()
+            posts_alerted_by_user[user][name] = qtde_posts_alerted
 
             posts_alerted = [
                 {

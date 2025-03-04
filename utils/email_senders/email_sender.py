@@ -86,7 +86,6 @@ class EmailSender:
         Método para verificar a estrutura do dicionário de configurações.
 
         :param dict_config: Dicionário com as configurações para envio de e-mails.
-
         :return: True se a estrutura estiver correta, False caso contrário.
         """
 
@@ -127,7 +126,6 @@ class EmailSender:
 
         :param subject: Assunto do e-mail.
         :param receivers: Lista de e-mails dos destinatários (separados com ',').
-
         :return: True se o e-mail foi enviado com sucesso, False caso contrário.
         """
 
