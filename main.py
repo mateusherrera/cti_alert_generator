@@ -5,6 +5,7 @@ Esse arquivo é o ponto de entrada da aplicação.
 :created at:    2025-02-07
 """
 
+from tqdm                                   import tqdm
 from cti.alerts                             import Alerts
 from datetime                               import datetime
 from pandas                                 import DataFrame
@@ -57,7 +58,7 @@ if __name__ == '__main__':
         posts_alerted_by_user = dict()
 
         # Para cada alerta
-        for alert_data in alerts_data:
+        for alert_data in tqdm(alerts_data, desc="Processing alerts"):
             # Pega os dados do alerta
             name            = alert_data.get('name', None)
             user            = alert_data.get('id_user', None)
@@ -119,9 +120,12 @@ if __name__ == '__main__':
             Alerts.update_run_date(alert_data['id'])
 
             # Envia o e-mail
-            input('as')
             email_sender = EmailSender()
-            email_sender.add_line(f'Foram encontrados {qtde_posts_alerted} posts relevantes para o alerta {name}.')
+            max_relevance = df_posts_relevants['relevance'].max()
+            email_sender.add_line(f'<html><body><h2>Alerta: {name}</h2>')
+            email_sender.add_line(f'<p>Foram encontrados {qtde_posts_alerted} posts relevantes para o alerta.</p>')
+            email_sender.add_line(f'<p>A maior relevância encontrada foi: {max_relevance * 100}%</p>')
+            email_sender.add_line('</body></html>')
             email_sender.send_email('Posts Relevantes', emails)
 
     pass

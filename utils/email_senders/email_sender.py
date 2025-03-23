@@ -9,6 +9,8 @@ from email.message import EmailMessage
 from dotenv import load_dotenv
 from smtplib import SMTP
 from os import getenv
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 class EmailSender:
@@ -129,13 +131,18 @@ class EmailSender:
         :return: True se o e-mail foi enviado com sucesso, False caso contrário.
         """
 
-        msg = EmailMessage()
+        msg = MIMEMultipart()
+        html = MIMEText(self.body, 'html')
+        msg.attach(html)
 
-        msg['Subject']  = subject
-        msg['From']     = self.sender
-        msg['To']       = receivers
+        msg['Subject'] = subject
+        msg['From'] = self.sender
 
-        msg.set_content(self.body)
+        # Ensure receivers is a string
+        if isinstance(receivers, list):
+            receivers = ', '.join(receivers)  # Join list into a string
+
+        msg['To'] = receivers
 
         try:
             with SMTP(self.smtp_server, self.smtp_port) as server:
@@ -143,8 +150,8 @@ class EmailSender:
                 server.login(self.smtp_user, self.smtp_password)
                 server.send_message(msg)
             return True
-
-        except:
+        except Exception as e:
+            print(f"Error sending email: {e}")
             return False
 
     # end: Methods
