@@ -5,10 +5,11 @@ Esse arquivo é o ponto de entrada da aplicação.
 :created at:    2025-02-07
 """
 
-from cti.alerts         import Alerts
-from datetime           import datetime
-from pandas             import DataFrame
-from cti.post_example   import PostExample
+from cti.alerts                             import Alerts
+from datetime                               import datetime
+from pandas                                 import DataFrame
+from cti.post_example                       import PostExample
+from utils.email_senders.email_sender       import EmailSender
 
 
 def save_alert_to_file(filename: str, alert_data: dict, df_posts_relevants: DataFrame):
@@ -38,9 +39,11 @@ def save_alert_to_file(filename: str, alert_data: dict, df_posts_relevants: Data
 
 
 if __name__ == '__main__':
+    # Pega os posts
     posts = PostExample.get_posts()
     df_posts = DataFrame(posts)
 
+    # Pega os alertas
     alerts_profiles = Alerts.get_to_run()
     alerts_data = alerts_profiles.get('data', None)
 
@@ -48,10 +51,14 @@ if __name__ == '__main__':
     now = datetime.now().strftime('%Y%m%d%H%M%S')
     filename = f'posts_alerted_{now}.txt'
 
+    # Se existem alertas e posts
     if alerts_data and posts:
+        # Inicializa o dicionário de posts alertados por usuário
         posts_alerted_by_user = dict()
 
+        # Para cada alerta
         for alert_data in alerts_data:
+            # Pega os dados do alerta
             name            = alert_data.get('name', None)
             user            = alert_data.get('id_user', None)
             emails          = alert_data.get('emails', None)
@@ -63,6 +70,7 @@ if __name__ == '__main__':
             last_run        = alert_data.get('last_run', None)
             run             = alert_data.get('run', None)
 
+            # Pega os posts relevantes
             df_posts_relevants = df_posts[
                 (df_posts['classification_date'] >= last_run) &
                 (df_posts['classification_date'] <= run) &
@@ -92,11 +100,6 @@ if __name__ == '__main__':
             # save_alert_to_file(filename, alert_data, df_posts_relevants)
 
             qtde_posts_alerted = len(df_posts_relevants)
-
-            if not posts_alerted_by_user[user]:
-                posts_alerted_by_user[user] = dict()
-            posts_alerted_by_user[user][name] = qtde_posts_alerted
-
             posts_alerted = [
                 {
                     'id_post'           :   row['id'],
@@ -114,5 +117,11 @@ if __name__ == '__main__':
             for post_alerted in posts_alerted:
                 Alerts.create_post_alerted(post_alerted)
             Alerts.update_run_date(alert_data['id'])
+
+            # Envia o e-mail
+            input('as')
+            email_sender = EmailSender()
+            email_sender.add_line(f'Foram encontrados {qtde_posts_alerted} posts relevantes para o alerta {name}.')
+            email_sender.send_email('Posts Relevantes', emails)
 
     pass
