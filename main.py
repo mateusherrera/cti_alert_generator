@@ -72,8 +72,6 @@ if __name__ == '__main__':
 
             # Pega os posts relevantes
             df_posts_relevants = df_posts[
-                (df_posts['classification_date'] >= last_run) &
-                (df_posts['classification_date'] <= run) &
                 (df_posts['relevance'] >= is_relevant) &
                 df_posts['source'].str.upper().isin([forum.upper() for forum in forums])
             ].copy()

@@ -45,10 +45,10 @@ class Post:
             
             posts += [
                 {
-                    'id': post['id'],
+                    'id': int(post['id']),
                     'title': post['title'],
                     'description': post['description'],
-                    'relevance': post['relevance'],
+                    'relevance': float(post['relevance']),
                     'source': source,
                     'collect_date': post['collect_date'],
                     'classification_date': post['classification_date'],
