@@ -55,7 +55,7 @@ class DBConnection:
 
     # ini: Methods
 
-    def get_connection(self) -> tuple[Connection, Engine]:
+    def get_connection(self) -> Connection:
         """
         Método para criar e retornar uma conexão com o banco de dados.
 
@@ -69,7 +69,7 @@ class DBConnection:
         )
 
         engine = create_engine(url, poolclass=NullPool)
-        return engine.connect(), engine
+        return engine.connect()
 
     # end: Methods
 

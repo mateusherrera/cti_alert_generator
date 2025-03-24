@@ -5,6 +5,7 @@ Esse arquivo é o ponto de entrada da aplicação.
 :created at:    2025-02-07
 """
 
+from cti.post                               import Post
 from tqdm                                   import tqdm
 from cti.alerts                             import Alerts
 from datetime                               import datetime
@@ -40,10 +41,6 @@ def save_alert_to_file(filename: str, alert_data: dict, df_posts_relevants: Data
 
 
 if __name__ == '__main__':
-    # Pega os posts
-    posts = PostExample.get_posts()
-    df_posts = DataFrame(posts)
-
     # Pega os alertas
     alerts_profiles = Alerts.get_to_run()
     alerts_data = alerts_profiles.get('data', None)
@@ -52,8 +49,7 @@ if __name__ == '__main__':
     now = datetime.now().strftime('%Y%m%d%H%M%S')
     filename = f'posts_alerted_{now}.txt'
 
-    # Se existem alertas e posts
-    if alerts_data and posts:
+    if alerts_data:
         # Inicializa o dicionário de posts alertados por usuário
         posts_alerted_by_user = dict()
 
@@ -70,6 +66,9 @@ if __name__ == '__main__':
 
             last_run        = alert_data.get('last_run', None)
             run             = alert_data.get('run', None)
+
+            posts = Post.get_posts(last_run, run, forums)
+            df_posts = DataFrame(posts)
 
             # Pega os posts relevantes
             df_posts_relevants = df_posts[
