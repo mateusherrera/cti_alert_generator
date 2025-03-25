@@ -7,6 +7,7 @@ Módulo para buscar posts.
 
 from utils.database_connections.db_connection import DBConnection
 from pandas import read_sql
+from datetime import datetime, timedelta
 
 
 class Post:
@@ -25,6 +26,7 @@ class Post:
         :return: Lista com os posts encontrados.
         """
 
+        ini_date = (datetime.strptime(ini_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
         if not isinstance(sources, list):
             sources = [sources]
 
